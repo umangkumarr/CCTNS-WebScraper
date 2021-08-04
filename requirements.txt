@@ -1,0 +1,5 @@
+pandas
+xlrd
+requests
+json
+datetime
