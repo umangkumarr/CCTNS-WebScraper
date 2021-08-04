@@ -4,6 +4,27 @@ import json
 import xlrd
 from datetime import datetime as dt
 
+URL = "http://digitalpolicecitizenservices.gov.in/centercitizen/"
+URL_F = ["login.htm", "sendOtp.htm", "j_spring_security_check",
+         "searchproclaimedOffender.htm?", "printProclaimedOffender.htm"]
+path = "CCTNS/pdf/"  # directory path to save the offender detials
+
+r = requests.get(URL+URL_F[0])
+cookie = r.headers['Set-Cookie'].split(';')[0]
+header = {'User-Agent': 'Mozilla/5.0', 'Cookie': cookie}
+
+p_no = input("Enter Mobile Number: ")
+data = {'mobileNo': int(p_no)}
+r = requests.post(URL+URL_F[1], headers=header, data=data)
+
+OTP = input("Enter OTP: ")
+data = {'j_username': p_no, 'j_password': OTP,
+        'firstName': 'u', 'userFlag': '0'}
+r = requests.post(URL+URL_F[2], headers=header, data=data)
+
+cookie = r.headers['Set-Cookie'].split(';')[0]
+header['Cookie'] = cookie
+
 df = pandas.read_excel(open("CCTNS/dummydata.xlsx", "rb"))
 record = json.load(open("CCTNS/records.json",))
 
